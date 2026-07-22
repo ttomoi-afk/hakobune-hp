@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ページが見つかりません｜ハコブネ（仮称）</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0f2c5c">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@600&family=Zen+Kaku+Gothic+New:wght@400;500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--serif:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho','YuMincho','IPAexMincho','IPAPMincho',serif;--en:'Jost','Avenir Next','Helvetica Neue',sans-serif}
+*{margin:0;box-sizing:border-box}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-22px) rotate(-2deg)}}
+@keyframes cloud{from{transform:translate(0,0) scale(1)}to{transform:translate(-60px,-12px) scale(1.06)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+body{min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;
+ color:#fff;font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;
+ background:linear-gradient(178deg,#071b3d 0%,#123c78 46%,#4e88c0 82%,#c9e0f4 108%)}
+.blob{position:fixed;border-radius:50%;filter:blur(64px);pointer-events:none}
+.b1{left:-10%;bottom:-30%;width:66%;height:56%;background:radial-gradient(ellipse,rgba(255,255,255,.7),rgba(255,255,255,0) 66%);animation:cloud 28s ease-in-out infinite alternate}
+.cap{position:fixed;right:8%;top:18%;width:150px;height:198px;border-radius:56px;
+ background:linear-gradient(185deg,#eef7fe,#a5cbec 45%,#16437f);
+ box-shadow:0 50px 100px rgba(5,22,50,.45),inset 0 2px 14px rgba(255,255,255,.6);animation:bob 10s ease-in-out infinite;pointer-events:none}
+.wrap{position:relative;text-align:center;padding:36px;max-width:620px}
+.kick{font-family:var(--en);letter-spacing:.42em;font-size:11px;color:#f2c66d;font-weight:500}
+.num{font-family:var(--serif);font-size:clamp(84px,16vw,140px);letter-spacing:.06em;line-height:1;margin:18px 0 6px}
+h1{font-family:var(--serif);font-size:clamp(20px,3.4vw,26px);letter-spacing:.12em;font-weight:600;margin-bottom:18px}
+p{color:#d3e4f6;font-size:14px;letter-spacing:.03em;line-height:2;margin-bottom:34px}
+.btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;padding:14px 30px;border-radius:999px;font-weight:700;font-size:13px;letter-spacing:.1em;text-decoration:none;transition:transform .3s}
+.btn:hover{transform:translateY(-2px)}
+.p{color:#fff;background:#e8a020;box-shadow:0 10px 26px rgba(232,160,32,.35)}
+.g{color:#fff;border:1.5px solid rgba(255,255,255,.6)}
+.mk{width:44px;height:44px;margin-bottom:22px}
+</style>
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="cap"></div>
+<div class="wrap">
+<svg class="mk" viewBox="0 0 256 256" aria-hidden="true"><rect width="256" height="256" rx="56" fill="rgba(255,255,255,.14)"/><g transform="translate(49,49) scale(0.615)"><path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z" fill="#fff"/></g></svg>
+<div class="kick">PAGE NOT FOUND</div>
+<div class="num">404</div>
+<h1>お探しのページは見つかりませんでした</h1>
+<p>ページが移動または削除された可能性があります。<br>お手数ですが、トップページからお探しください。</p>
+<div class="btns">
+<a class="btn p" href="index.html">トップへ戻る</a>
+<a class="btn g" href="shippers.html">配送のご相談</a>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="ハコブネ">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+<stop offset="0" stop-color="#123c78"/>
+<stop offset="1" stop-color="#0b1f42"/>
+</linearGradient>
+</defs>
+<rect width="256" height="256" rx="56" fill="#0f2c5c"/>
+<rect width="256" height="256" rx="56" fill="url(#sky)"/>
+<g transform="translate(49,49) scale(0.615)">
+<path d="M231.4,44.34s0,.1,0,.15l-58.2,191.94a15.88,15.88,0,0,1-14,11.51q-.69.06-1.38.06a15.86,15.86,0,0,1-14.42-9.15L107,164.15a4,4,0,0,1,.77-4.58l57.92-57.92a8,8,0,0,0-11.31-11.31L96.43,148.26a4,4,0,0,1-4.58.77L17.08,112.64a16,16,0,0,1,2.49-29.8l191.94-58.2.15,0A16,16,0,0,1,231.4,44.34Z" fill="#ffffff"/>
+</g>
+<circle cx="196" cy="196" r="15" fill="#e8a020"/>
+</svg>

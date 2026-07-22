@@ -1,0 +1,9 @@
+# ハコブネ（仮称）— robots.txt
+# 現在は設立準備中のプロトタイプのため、検索エンジンのインデックスを止めています。
+# ▼ 本番公開時：下の「Disallow: /」を削除（またはコメントアウト）し、必要なら Allow を指定してください。
+# あわせて各HTMLの <meta name="robots"> を index,follow に変更してください。
+User-agent: *
+Disallow: /
+
+# 本番公開時に、下記の example ドメインを実ドメインへ置換してください。
+Sitemap: https://ttomoi-afk.github.io/hakobune-hp/sitemap.xml
