@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ハコブネ（仮称）加盟店管理（デモ）</title>
+</head>
+<body>
+<style>
+:root{
+  --bg:#eef4fb; --card:#ffffff; --card2:#f4f8fc; --ink:#16283e; --ink2:#3d5470; --mute:#6a7f98; --line:#dbe6f1;
+  --navy:#0f2c5c; --blue:#2f6db8; --amber:#e8a020; --amber-tint:#fbf1d9; --amber-ink:#8a5a05;
+  --good:#1f9d63; --good-tint:#e6f5ec; --bad:#c0392b; --bad-tint:#fdecea;
+  --shadow:0 8px 26px rgba(11,31,66,.12); --shadow-sm:0 2px 8px rgba(11,31,66,.08);
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0a1420; --card:#122032; --card2:#172940; --ink:#eaf1f8; --ink2:#c1d1e4; --mute:#8ba0bd; --line:#25394f;
+  --navy:#cfe0f4; --blue:#6fa6dd; --amber:#f2b23e; --amber-tint:#2a2411; --amber-ink:#f2c66d;
+  --good:#4fd18e; --good-tint:#12261c; --bad:#ef6a5c; --bad-tint:#2a1512;
+  --shadow:0 10px 30px rgba(0,0,0,.5); --shadow-sm:0 3px 12px rgba(0,0,0,.4);
+}}
+:root[data-theme="light"]{--bg:#eef4fb;--card:#fff;--card2:#f4f8fc;--ink:#16283e;--ink2:#3d5470;--mute:#6a7f98;--line:#dbe6f1;--navy:#0f2c5c;--blue:#2f6db8;--amber:#e8a020;--amber-tint:#fbf1d9;--amber-ink:#8a5a05;--good:#1f9d63;--good-tint:#e6f5ec;--bad:#c0392b;--bad-tint:#fdecea;--shadow:0 8px 26px rgba(11,31,66,.12);--shadow-sm:0 2px 8px rgba(11,31,66,.08);}
+:root[data-theme="dark"]{--bg:#0a1420;--card:#122032;--card2:#172940;--ink:#eaf1f8;--ink2:#c1d1e4;--mute:#8ba0bd;--line:#25394f;--navy:#cfe0f4;--blue:#6fa6dd;--amber:#f2b23e;--amber-tint:#2a2411;--amber-ink:#f2c66d;--good:#4fd18e;--good-tint:#12261c;--bad:#ef6a5c;--bad-tint:#2a1512;--shadow:0 10px 30px rgba(0,0,0,.5);--shadow-sm:0 3px 12px rgba(0,0,0,.4);}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,system-ui,sans-serif;color:var(--ink);background:var(--bg);-webkit-font-smoothing:antialiased;min-height:100dvh}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px 60px}
+.top{display:flex;align-items:center;gap:12px;padding:16px 4px;position:sticky;top:0;background:var(--bg);z-index:5}
+.top .logo{width:34px;height:34px;flex:0 0 auto}
+.top .wm b{font-size:17px;font-weight:800;color:var(--navy);display:block;line-height:1.1}
+.top .wm span{font-size:9px;letter-spacing:.2em;color:var(--blue);font-weight:700}
+.top .sp{margin-left:auto}
+.badge{font-size:11px;font-weight:800;padding:5px 11px;border-radius:20px}
+.badge.live{color:var(--good);background:var(--good-tint)}
+.badge.demo{color:var(--amber-ink);background:var(--amber-tint)}
+.ghost{border:1px solid var(--line);background:var(--card);color:var(--ink2);font-weight:700;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:13px}
+.ghost:hover{background:var(--card2)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-sm);padding:18px;margin-bottom:16px}
+.card h2{margin:0 0 14px;font-size:16px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:9px}
+.card h2 svg{width:19px;height:19px;color:var(--blue)}
+.sec-actions{margin-left:auto;display:flex;gap:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+@media (max-width:560px){.grid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:700;color:var(--mute)}
+.field input,.field select{border:1px solid var(--line);background:var(--card2);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--ink);width:100%}
+.field input:focus,.field select:focus{outline:2px solid var(--blue);outline-offset:1px}
+.row{display:flex;align-items:center;gap:12px}
+.switch{position:relative;width:52px;height:30px;flex:0 0 auto;border-radius:20px;background:var(--line);cursor:pointer;transition:background .15s;border:none}
+.switch.on{background:var(--good)}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.switch.on::after{transform:translateX(22px)}
+.switch:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.primary{border:none;background:var(--amber);color:#5a3a02;font-weight:800;font-size:14px;border-radius:12px;padding:11px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.primary:hover{filter:brightness(1.04)}
+.primary svg{width:17px;height:17px}
+.primary:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+/* products */
+.prow{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--line);border-radius:14px;margin-bottom:10px;background:var(--card)}
+.prow.off{opacity:.62}
+.pthumb{width:52px;height:52px;border-radius:11px;flex:0 0 auto;display:grid;place-items:center;color:#fff}
+.pthumb svg{width:26px;height:26px}
+.pinfo{flex:1;min-width:0}
+.pinfo b{font-size:14.5px;font-weight:800;display:block;line-height:1.3}
+.pinfo small{color:var(--mute);font-size:11.5px}
+.pprice{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;margin-right:2px;white-space:nowrap}
+.pact{display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.iconbtn{border:1px solid var(--line);background:var(--card2);color:var(--ink2);width:34px;height:34px;border-radius:9px;cursor:pointer;display:grid;place-items:center}
+.iconbtn:hover{background:var(--line)}
+.iconbtn.danger:hover{background:var(--bad-tint);color:var(--bad);border-color:var(--bad)}
+.iconbtn svg{width:17px;height:17px}
+.availtag{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.availtag.on{color:var(--good);background:var(--good-tint)}
+.availtag.off{color:var(--bad);background:var(--bad-tint)}
+.c-ramen{background:linear-gradient(135deg,#d8632f,#a8421f)}.c-food{background:linear-gradient(135deg,#e8892b,#c9611f)}
+.c-grocery{background:linear-gradient(135deg,#3fa06a,#237a4a)}.c-cafe{background:linear-gradient(135deg,#b06b3a,#8a4f28)}
+.c-daily{background:linear-gradient(135deg,#3f7ab5,#2f5f96)}
+.note{font-size:11.5px;color:var(--ink2);text-align:center;line-height:1.6;opacity:.85;margin-top:8px}
+.note b{color:var(--navy)}
+/* login */
+.login{max-width:380px;margin:6vh auto 0}
+/* modal */
+.modal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;padding:16px}
+.modal.on{display:flex}
+.scrim{position:absolute;inset:0;background:rgba(9,20,36,.55)}
+.sheet{position:relative;width:100%;max-width:440px;background:var(--card);border-radius:18px;box-shadow:var(--shadow);padding:20px;max-height:88dvh;overflow:auto}
+.sheet h3{margin:0 0 14px;font-size:16px;font-weight:800;color:var(--navy)}
+.mfoot{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:24px;font-weight:700;font-size:13.5px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:60;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.toast svg{width:17px;height:17px}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.err{color:var(--bad);font-size:13px;margin-top:8px}
+/* tabs */
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--ink2);font-weight:800;font-size:13.5px;border-radius:12px;padding:9px 16px;cursor:pointer}
+.tab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tab .n{display:inline-block;min-width:18px;padding:0 5px;margin-left:6px;border-radius:20px;background:var(--amber);color:#5a3a02;font-size:11px}
+.tab.on .n{background:#fff;color:var(--navy)}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow-sm)}
+.kpi small{font-size:11px;color:var(--mute);font-weight:700;display:block;margin-bottom:2px}
+.kpi b{font-size:21px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi b small{font-size:12px;color:var(--mute);display:inline;margin:0}
+/* order cards */
+.ocard{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;background:var(--card)}
+.ohead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.ohead b{font-size:14px;font-weight:800}
+.otime{font-size:12px;color:var(--mute);font-weight:700}
+.ochip{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.prep-received{color:var(--blue);background:var(--card2)}
+.prep-cooking{color:var(--amber-ink);background:var(--amber-tint)}
+.prep-ready{color:var(--good);background:var(--good-tint)}
+.ochip.del{color:var(--ink2);background:var(--card2);margin-left:auto}
+.oitems{font-size:13px;color:var(--ink);line-height:1.5;margin-bottom:10px}
+.ofoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ospot{font-size:11.5px;color:var(--mute);display:inline-flex;align-items:center;gap:3px}
+.ospot svg{width:13px;height:13px;color:var(--amber);flex:0 0 auto}
+.ototal{margin-left:auto;font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.ofoot .primary{padding:9px 14px;font-size:13px}
+.done-lbl{font-size:12.5px;font-weight:800;color:var(--good);display:inline-flex;align-items:center;gap:5px}
+.done-lbl svg{width:15px;height:15px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="12" width="34" height="24" rx="8" fill="#cfe3f6"/><rect x="12" y="17" width="24" height="11" rx="4" fill="#0f2c5c"/><circle cx="19" cy="22.5" r="2.1" fill="#7EC8FF"/><circle cx="29" cy="22.5" r="2.1" fill="#7EC8FF"/><rect x="21.5" y="7" width="5" height="6" rx="2" fill="#e8a020"/><circle cx="16" cy="38" r="4" fill="#0b1f42"/><circle cx="32" cy="38" r="4" fill="#0b1f42"/></svg>
+    <div class="wm"><b>ハコブネ 加盟店管理</b><span>HAKOBUNE MERCHANT CONSOLE</span></div>
+    <span class="sp"></span>
+    <span id="modeBadge" class="badge demo">DEMO</span>
+    <button class="ghost" id="logoutBtn" style="display:none">ログアウト</button>
+  </div>
+  <div id="app"></div>
+  <p class="note"><b>ハコブネ（仮称）｜デモ（試作）</b>　加盟店（店舗オーナー）が商品・在庫（品切れ）・営業時間・料金を管理する画面の試作です。数値・店舗は仮。未接続時の変更は保存されません。</p>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true"><div class="scrim" data-act="closeModal"></div><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ICON={
+  store:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 9 5.5 4h13L20 9M4 9h16M4 9v11h16V9M9 20v-6h6v6"/></svg>',
+  box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 8l9-5 9 5v8l-9 5-9-5V8Z"/><path d="M3 8l9 5 9-5M12 13v8"/></svg>',
+  edit:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/><path d="m14 6 4 4"/></svg>',
+  trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>',
+  plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-11"/></svg>',
+  save:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M5 4h11l3 3v13H5V4Z"/><path d="M8 4v5h7M8 20v-6h8v6"/></svg>',
+  ramen:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11h16a8 8 0 0 1-16 0Z"/><path d="M6 11c1-4 3-6 3-6M10 11c1-5 3-6 3-6M14 11c1-4 2-5 2-5"/><path d="M3 20h18"/></svg>',
+  bread:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 13c-2 0-3-1.5-3-3s1.5-3 4-3h8c4 0 6 2 6 4.5S18 19 14 19H8c-3 0-4-2-3-6Z"/></svg>',
+  cafe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h11v4a5 5 0 0 1-5 5H10a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M4 21h13"/></svg>',
+  leaf:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4C9 4 4 9 4 18c8 0 16-4 16-14Z"/><path d="M4 20c3-6 7-9 12-11"/></svg>',
+  daily:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M9 3h4l1 3H8l1-3Z"/><path d="M8 6h6l1.5 14h-9L8 6Z"/></svg>',
+  pencil:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L20 8l-4-4L4 16v4Z"/><path d="m14 6 4 4"/></svg>',
+  list:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7Zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5Z"/></svg>',
+};
+const GLYPHS=[['ramen','麺・丼'],['cafe','カフェ・スイーツ'],['bread','パン・食品'],['leaf','野菜・産直'],['daily','日用品'],['pencil','雑貨']];
+const GCLASS={ramen:'c-ramen',cafe:'c-cafe',bread:'c-grocery',leaf:'c-grocery',daily:'c-daily',pencil:'c-daily',food:'c-food'};
+const CATS=['フード','食料品','カフェ・スイーツ','雑貨・日用品'];
+const yen=n=>'¥'+Number(n).toLocaleString('ja-JP');
+const $=id=>document.getElementById(id);
+function toast(m){const t=$('toast');t.innerHTML=ICON.check+'<span>'+m+'</span>';t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('on'),1900);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+const MOCK_STORE={id:'mock',name:'泉北らーめん 泉ヶ丘',category:'フード',hours:'11:00–15:00 / 17:30–21:00',deliveryFee:100,tag:'人気',glyph:'ramen',active:true,products:[
+ {id:'m1',name:'醤油まぜそば',price:980,glyph:'ramen',available:true,options:{title:'麺の量',choices:[['並盛（200g）',0],['大盛（300g）',0],['特盛（400g）',150]]}},
+ {id:'m2',name:'味噌ラーメン',price:950,glyph:'ramen',available:true,options:{title:'麺の量',choices:[['並盛（150g）',0],['大盛（250g）',0]]}},
+ {id:'m3',name:'塩ラーメン',price:900,glyph:'ramen',available:true,options:null},
+ {id:'m4',name:'焼き餃子（6個）',price:380,glyph:'ramen',available:false,options:null},
+]};
+
+const PAYNAME={card:'カード',qr:'QR決済',cash:'代引き',cod:'代引き'};
+const MOCK_ORDERS=[
+ {code:'HKB-DEMO01',prepStatus:'received',status:'dispatched',total:1460,paymentMethod:'card',spot:'泉ヶ丘駅前 受取ポイント',robotName:'ハコブネ号 R-01',placedAt:Date.now()-9*60000,items:[{name:'醤油まぜそば',option:'大盛（300g）',qty:1},{name:'焼き餃子（6個）',option:null,qty:1}]},
+ {code:'HKB-DEMO02',prepStatus:'cooking',status:'dispatched',total:2000,paymentMethod:'qr',spot:'茶山台 近隣センター',robotName:'ハコブネ号 R-02',placedAt:Date.now()-6*60000,items:[{name:'味噌ラーメン',option:'並盛（150g）',qty:2}]},
+ {code:'HKB-DEMO03',prepStatus:'ready',status:'delivering',total:1000,paymentMethod:'card',spot:'栂・美木多 パンダ広場',robotName:'ハコブネ号 R-03',placedAt:Date.now()-3*60000,items:[{name:'塩ラーメン',option:null,qty:1}]},
+ {code:'HKB-DEMO04',prepStatus:'ready',status:'completed',total:1230,paymentMethod:'cash',spot:'泉ヶ丘駅前 受取ポイント',robotName:'ハコブネ号 R-01',placedAt:Date.now()-40*60000,items:[{name:'醤油まぜそば',option:'特盛（400g）',qty:1}]},
+];
+function computeSummary(os){ const rev=os.reduce((a,o)=>a+o.total,0);
+  return {today:{orders:os.length,revenue:rev},pending:os.filter(o=>o.prepStatus==='received'||o.prepStatus==='cooking').length,ready:os.filter(o=>o.prepStatus==='ready').length,completed:os.filter(o=>o.status==='completed').length}; }
+function fmtTime(x){ const d=new Date(x); const p=n=>String(n).padStart(2,'0'); return p(d.getHours())+':'+p(d.getMinutes()); }
+function prepNext(p){ return p==='received'?{to:'cooking',label:'調理を開始'}:p==='cooking'?{to:'ready',label:'受け渡し準備完了'}:null; }
+function prepLabel(p){ return {received:'受付',cooking:'調理中',ready:'準備完了'}[p]||p; }
+function delLabel(s){ return {placed:'手配中',dispatched:'配送手配',delivering:'配送中',arrived:'到着',completed:'完了',canceled:'キャンセル'}[s]||s; }
+
+const API=(new URLSearchParams(location.search).get('api')||(window.HAKOBUNE_API||'')).replace(/\/$/,'');
+const S={token:null,store:null,orders:[],summary:null,tab:'orders',live:false,editing:null};
+
+async function api(path,opt){ opt=opt||{}; const h={...(opt.headers||{})}; if(S.token)h.Authorization='Bearer '+S.token; if(opt.body&&!(opt.body instanceof FormData))h['Content-Type']='application/json';
+  const r=await fetch(API+path,{...opt,headers:h}); if(!r.ok){let m=r.statusText;try{const b=await r.json();if(b.message)m=Array.isArray(b.message)?b.message.join(', '):b.message;}catch(e){} throw new Error(m);} if(r.status===204)return null; return r.json(); }
+
+/* ---------- render ---------- */
+function render(){
+  $('modeBadge').className='badge '+(S.live?'live':'demo'); $('modeBadge').textContent=S.live?'LIVE':'DEMO';
+  $('logoutBtn').style.display=S.live?'':'none';
+  const app=$('app');
+  if(S.live && !S.token){ app.innerHTML=viewLogin(); return; }
+  if(!S.store){ app.innerHTML='<div class="card">読み込み中…</div>'; return; }
+  const content = S.tab==='orders'?viewOrders() : S.tab==='products'?viewProducts() : viewStore();
+  app.innerHTML=viewTabs()+content;
+}
+function viewTabs(){
+  const pending=S.summary?S.summary.pending:((S.orders||[]).filter(o=>o.prepStatus!=='ready').length);
+  const t=(id,label,n)=>'<button class="tab'+(S.tab===id?' on':'')+'" data-act="tab" data-tab="'+id+'">'+label+(n?'<span class="n">'+n+'</span>':'')+'</button>';
+  return '<div class="tabs">'+t('orders','注文',pending)+t('products','商品')+t('store','設定')+'</div>';
+}
+function summaryKpis(){
+  const s=S.summary||{today:{orders:0,revenue:0},pending:0,ready:0,completed:0};
+  const tile=(lbl,val,unit)=>'<div class="kpi"><small>'+lbl+'</small><b>'+val+(unit?'<small> '+unit+'</small>':'')+'</b></div>';
+  return '<div class="kpis">'+tile('本日の注文',s.today.orders,'件')+tile('本日の売上',yen(s.today.revenue),'')+tile('対応中',s.pending,'件')+tile('完了',s.completed,'件')+'</div>';
+}
+function viewOrders(){
+  const os=S.orders||[];
+  return summaryKpis()+'<div class="card"><h2>'+ICON.list+'注文（'+os.length+'）</h2>'
+   +(os.length?os.map(orderCard).join(''):'<p class="note" style="text-align:left">注文はまだありません。</p>')+'</div>';
+}
+function orderCard(o){
+  const items=o.items.map(i=>esc(i.name)+(i.option?'（'+esc(i.option)+'）':'')+' ×'+i.qty).join(' / ');
+  const nx=prepNext(o.prepStatus);
+  const action=nx?'<button class="primary" data-act="prep" data-code="'+esc(o.code)+'" data-to="'+nx.to+'">'+nx.label+'</button>':'<span class="done-lbl">'+ICON.check+' 準備完了</span>';
+  return '<div class="ocard"><div class="ohead"><b>#'+esc(o.code)+'</b><span class="otime">'+fmtTime(o.placedAt)+'</span>'
+   +'<span class="ochip prep-'+o.prepStatus+'">'+prepLabel(o.prepStatus)+'</span>'
+   +'<span class="ochip del">'+delLabel(o.status)+(o.robotName?' ・ '+esc(o.robotName):'')+'</span></div>'
+   +'<div class="oitems">'+items+'</div>'
+   +'<div class="ofoot"><span class="ospot">'+ICON.pin+' '+esc(o.spot||'—')+' ・ '+(PAYNAME[o.paymentMethod]||'—')+'</span><b class="ototal">'+yen(o.total)+'</b>'+action+'</div></div>';
+}
+
+function viewLogin(){
+  return '<div class="card login"><h2>'+ICON.store+'加盟店ログイン</h2>'
+   +'<div class="field" style="margin-bottom:10px"><label>メール</label><input id="lgEmail" value="merchant1@example.com"></div>'
+   +'<div class="field" style="margin-bottom:14px"><label>パスワード</label><input id="lgPass" type="password" value="password123"></div>'
+   +'<button class="primary" data-act="login" style="width:100%;justify-content:center">ログイン</button>'
+   +'<div id="lgErr" class="err"></div>'
+   +'<p class="note" style="margin-top:14px">シード初期値：merchant1@example.com / password123</p></div>';
+}
+
+function viewStore(){
+  const s=S.store;
+  const catOpts=CATS.map(c=>'<option'+(c===s.category?' selected':'')+'>'+esc(c)+'</option>').join('');
+  return '<div class="card"><h2>'+ICON.store+'店舗設定'
+   +'<span class="sec-actions"><button class="switch '+(s.active?'on':'')+'" data-act="toggleActive" aria-label="営業状態" title="'+(s.active?'営業中':'停止中')+'"></button>'
+   +'<span style="font-size:12px;font-weight:800;align-self:center;color:'+(s.active?'var(--good)':'var(--mute)')+'">'+(s.active?'営業中':'停止中')+'</span></span></h2>'
+   +'<div class="grid">'
+   +'<div class="field" style="grid-column:1/-1"><label>店舗名</label><input id="stName" value="'+esc(s.name)+'"></div>'
+   +'<div class="field"><label>カテゴリ</label><select id="stCat">'+catOpts+'</select></div>'
+   +'<div class="field"><label>タグ（任意・例：人気/産直）</label><input id="stTag" value="'+esc(s.tag||'')+'"></div>'
+   +'<div class="field"><label>営業時間</label><input id="stHours" value="'+esc(s.hours)+'"></div>'
+   +'<div class="field"><label>配送料（円）</label><input id="stFee" type="number" min="0" value="'+Number(s.deliveryFee)+'"></div>'
+   +'</div><div style="margin-top:14px;text-align:right"><button class="primary" data-act="saveStore">'+ICON.save+' 店舗設定を保存</button></div></div>';
+}
+
+function viewProducts(){
+  const items=S.store.products||[];
+  let rows=items.map(p=>{
+    const opt=p.options&&p.options.title?p.options.title:'';
+    return '<div class="prow'+(p.available?'':' off')+'"><div class="pthumb '+(GCLASS[p.glyph]||'c-food')+'">'+(ICON[p.glyph]||ICON.box)+'</div>'
+     +'<div class="pinfo"><b>'+esc(p.name)+'</b><small>'+(opt?('オプション：'+esc(opt)+' ・ '):'')+'</small></div>'
+     +'<div class="pprice">'+yen(p.price)+'</div>'
+     +'<div class="pact">'
+     +'<span class="availtag '+(p.available?'on':'off')+'">'+(p.available?'販売中':'品切れ')+'</span>'
+     +'<button class="switch '+(p.available?'on':'')+'" data-act="toggleAvail" data-id="'+p.id+'" aria-label="在庫" title="販売中/品切れ"></button>'
+     +'<button class="iconbtn" data-act="editProduct" data-id="'+p.id+'" aria-label="編集">'+ICON.edit+'</button>'
+     +'<button class="iconbtn danger" data-act="delProduct" data-id="'+p.id+'" aria-label="削除">'+ICON.trash+'</button>'
+     +'</div></div>';
+  }).join('');
+  if(!items.length) rows='<p class="note" style="text-align:left">商品がありません。「商品を追加」から登録してください。</p>';
+  return '<div class="card"><h2>'+ICON.box+'商品（'+items.length+'）<span class="sec-actions"><button class="primary" data-act="addProduct">'+ICON.plus+' 商品を追加</button></span></h2>'+rows+'</div>';
+}
+
+/* ---------- product modal ---------- */
+function openProductModal(p){
+  S.editing=p?p.id:null;
+  const gOpts=GLYPHS.map(g=>'<option value="'+g[0]+'"'+((p&&p.glyph===g[0])||(!p&&g[0]===(S.store.glyph||'food'))?' selected':'')+'>'+g[1]+'</option>').join('');
+  $('sheet').innerHTML='<h3>'+(p?'商品を編集':'商品を追加')+'</h3>'
+   +'<div class="field" style="margin-bottom:10px"><label>商品名</label><input id="pName" value="'+esc(p?p.name:'')+'"></div>'
+   +'<div class="grid"><div class="field"><label>価格（円）</label><input id="pPrice" type="number" min="0" value="'+(p?Number(p.price):'')+'"></div>'
+   +'<div class="field"><label>絵柄</label><select id="pGlyph">'+gOpts+'</select></div></div>'
+   +'<div class="row" style="margin-top:12px"><button class="switch '+(!p||p.available?'on':'')+'" id="pAvail" data-act="toggleModalAvail"></button><span style="font-size:13px;font-weight:700">販売中（オフ＝品切れ）</span></div>'
+   +(p&&p.options&&p.options.title?'<p class="note" style="text-align:left;margin-top:10px">オプション「'+esc(p.options.title)+'」は本デモでは編集対象外（表示のみ）。</p>':'')
+   +'<div class="mfoot"><button class="ghost" data-act="closeModal">キャンセル</button><button class="primary" data-act="saveProduct">'+ICON.check+' 保存</button></div>';
+  $('sheet').dataset.avail=(!p||p.available)?'1':'0';
+  $('modal').classList.add('on'); $('modal').setAttribute('aria-hidden','false');
+}
+function closeModal(){ $('modal').classList.remove('on'); $('modal').setAttribute('aria-hidden','true'); S.editing=null; }
+
+/* ---------- actions (event delegation) ---------- */
+document.addEventListener('click', async (e)=>{
+  const el=e.target.closest('[data-act]'); if(!el) return;
+  const act=el.dataset.act, id=el.dataset.id;
+  try{
+    if(act==='login'){ await doLogin(); }
+    else if(act==='logout'){ /* handled below */ }
+    else if(act==='tab'){ S.tab=el.dataset.tab; render(); }
+    else if(act==='prep'){ await setPrep(el.dataset.code, el.dataset.to); }
+    else if(act==='closeModal'){ closeModal(); }
+    else if(act==='toggleActive'){ await patchStore({active:!S.store.active}); }
+    else if(act==='saveStore'){ await saveStore(); }
+    else if(act==='addProduct'){ openProductModal(null); }
+    else if(act==='editProduct'){ openProductModal(S.store.products.find(p=>p.id===id)); }
+    else if(act==='toggleAvail'){ await patchProduct(id,{available:!S.store.products.find(p=>p.id===id).available}); }
+    else if(act==='delProduct'){ await delProduct(id); }
+    else if(act==='toggleModalAvail'){ const b=$('pAvail'); const on=b.classList.toggle('on'); $('sheet').dataset.avail=on?'1':'0'; }
+    else if(act==='saveProduct'){ await saveProduct(); }
+  }catch(err){ toast(err.message||'エラー'); }
+});
+$('logoutBtn').onclick=()=>{ S.token=null; S.store=null; render(); };
+
+async function doLogin(){
+  const email=$('lgEmail').value.trim(), password=$('lgPass').value;
+  try{ const r=await api('/auth/login',{method:'POST',body:JSON.stringify({email,password})});
+    if(r.user.role!=='merchant'){ $('lgErr').textContent='この画面は加盟店アカウント専用です。'; return; }
+    S.token=r.accessToken; await loadStore(); await Promise.all([loadOrders(),loadSummary()]); render(); toast('ログインしました');
+  }catch(e){ $('lgErr').textContent='ログインに失敗しました：'+e.message; }
+}
+async function loadStore(){ S.store=await api('/merchant/store'); }
+async function loadOrders(){ S.orders=await api('/merchant/orders'); }
+async function loadSummary(){ S.summary=await api('/merchant/summary'); }
+async function setPrep(code,to){
+  if(S.live){ S.orders=await api('/merchant/orders/'+code+'/prep',{method:'POST',body:JSON.stringify({prepStatus:to})}); S.summary=await api('/merchant/summary'); }
+  else { const o=S.orders.find(x=>x.code===code); if(o)o.prepStatus=to; S.summary=computeSummary(S.orders); }
+  render(); toast(to==='cooking'?'調理を開始しました':'受け渡し準備完了にしました');
+}
+
+async function patchStore(patch){
+  if(S.live){ S.store=await api('/merchant/store',{method:'PATCH',body:JSON.stringify(patch)}); }
+  else { Object.assign(S.store,patch); }
+  render(); toast('店舗設定を更新しました');
+}
+async function saveStore(){
+  const patch={ name:$('stName').value.trim(), category:$('stCat').value, tag:$('stTag').value.trim(), hours:$('stHours').value.trim(), deliveryFee:Number($('stFee').value)||0 };
+  await patchStore(patch);
+}
+async function patchProduct(id,patch){
+  if(S.live){ S.store=await api('/merchant/products/'+id,{method:'PATCH',body:JSON.stringify(patch)}); }
+  else { const p=S.store.products.find(x=>x.id===id); if(p)Object.assign(p,patch); }
+  render(); toast('商品を更新しました');
+}
+async function delProduct(id){
+  const p=S.store.products.find(x=>x.id===id); if(!p) return;
+  if(!confirm('「'+p.name+'」を削除しますか？')) return;
+  if(S.live){ S.store=await api('/merchant/products/'+id,{method:'DELETE'}); }
+  else { S.store.products=S.store.products.filter(x=>x.id!==id); }
+  render(); toast('商品を削除しました');
+}
+async function saveProduct(){
+  const name=$('pName').value.trim(), price=Number($('pPrice').value), glyph=$('pGlyph').value, available=$('sheet').dataset.avail==='1';
+  if(!name){ toast('商品名を入力してください'); return; }
+  if(!(price>=0)){ toast('価格を入力してください'); return; }
+  const body={name,price,glyph,available};
+  if(S.live){
+    if(S.editing) S.store=await api('/merchant/products/'+S.editing,{method:'PATCH',body:JSON.stringify(body)});
+    else S.store=await api('/merchant/products',{method:'POST',body:JSON.stringify(body)});
+  } else {
+    if(S.editing){ const p=S.store.products.find(x=>x.id===S.editing); Object.assign(p,body); }
+    else { S.store.products.push({id:'m'+Date.now().toString(36),options:null,...body}); }
+  }
+  closeModal(); render(); toast(S.editing?'商品を更新しました':'商品を追加しました');
+}
+
+/* ---------- init ---------- */
+async function init(){
+  if(API){
+    try{ // API疎通確認（未ログインでも catalog は公開）
+      const ok=await fetch(API+'/catalog/stores').then(r=>r.ok).catch(()=>false);
+      if(ok){ S.live=true; render(); return; }
+    }catch(e){}
+  }
+  // デモ（未接続）：モック店舗＋モック注文
+  S.live=false; S.store=JSON.parse(JSON.stringify(MOCK_STORE));
+  S.orders=JSON.parse(JSON.stringify(MOCK_ORDERS)); S.summary=computeSummary(S.orders);
+  render();
+}
+init();
+</script>
+</body>
+</html>
